@@ -1,0 +1,292 @@
+apiVersion: influxdata.com/v2alpha1
+kind: Label
+metadata:
+    name: burfect-hawking-705001
+spec:
+    color: '#006f49'
+    name: Jetson
+---
+apiVersion: influxdata.com/v2alpha1
+kind: Bucket
+metadata:
+    name: vivid-tu-b05003
+spec:
+    associations:
+      - kind: Label
+        name: burfect-hawking-705001
+    name: Jetson
+---
+apiVersion: influxdata.com/v2alpha1
+kind: Dashboard
+metadata:
+    name: jolly-chatelet-305001
+spec:
+    associations:
+      - kind: Label
+        name: burfect-hawking-705001
+    charts:
+      - axes:
+          - base: "10"
+            name: x
+            scale: linear
+          - base: "10"
+            label: Power/mW
+            name: "y"
+            scale: linear
+        colors:
+          - hex: '#00C9FF'
+            id: base
+            name: laser
+            type: text
+        decimalPlaces: 2
+        height: 3
+        hoverDimension: auto
+        kind: Single_Stat_Plus_Line
+        legendColorizeRows: true
+        legendOpacity: 1
+        legendOrientationThreshold: 1e+08
+        name: Averge Power Consumption
+        position: overlaid
+        queries:
+          - query: |-
+                from(bucket: "Jetson")
+                  |> range(start: v.timeRangeStart, stop: v.timeRangeStop)
+                  |> filter(fn: (r) => r["_measurement"] == "exec_jetson")
+                  |> filter(fn: (r) => r["_field"] == "jetson_power avg")
+                  |> aggregateWindow(every: v.windowPeriod, fn: mean, createEmpty: false)
+                  |> yield(name: "mean")
+        staticLegend: {}
+        suffix: mW
+        width: 3
+        xCol: _time
+        yCol: _value
+      - axes:
+          - base: "10"
+            name: x
+            scale: linear
+          - base: "10"
+            label: Usage
+            name: "y"
+            scale: linear
+            suffix: '%'
+        colors:
+          - hex: '#FDC44F'
+            id: 9a07eefe-2253-4b50-905e-561e526b6889
+            name: Cthulhu
+            type: scale
+          - hex: '#007C76'
+            id: 8e6ab1ed-41ce-402d-b65f-e1ad828ce7ea
+            name: Cthulhu
+            type: scale
+          - hex: '#8983FF'
+            id: 9bfaafbc-7abd-4096-969e-791c32cb2cd9
+            name: Cthulhu
+            type: scale
+        geom: line
+        height: 2
+        hoverDimension: auto
+        kind: Xy
+        legendColorizeRows: true
+        legendOpacity: 1
+        legendOrientationThreshold: 1e+08
+        name: CPU Core Usage
+        position: overlaid
+        queries:
+          - query: |-
+                from(bucket: "Jetson")
+                  |> range(start: v.timeRangeStart, stop: v.timeRangeStop)
+                  |> filter(fn: (r) => r["_measurement"] == "exec_jetson")
+                  |> filter(fn: (r) => r["_field"] == "jetson_CPU1" or r["_field"] == "jetson_CPU2" or r["_field"] == "jetson_CPU3" or r["_field"] == "jetson_CPU4")
+                  |> aggregateWindow(every: v.windowPeriod, fn: mean, createEmpty: false)
+                  |> yield(name: "mean")
+        staticLegend: {}
+        width: 12
+        xCol: _time
+        yCol: _value
+        yPos: 3
+      - axes:
+          - base: "10"
+            name: x
+            scale: linear
+          - base: "10"
+            label: Temperature
+            name: "y"
+            scale: linear
+            suffix: °C
+        colors:
+          - hex: '#31C0F6'
+            id: 415b3108-1d81-45f0-b8ab-348759ab5730
+            name: Nineteen Eighty Four
+            type: scale
+          - hex: '#A500A5'
+            id: 91944267-6f29-4d0e-92cb-6ed98e49c4d8
+            name: Nineteen Eighty Four
+            type: scale
+          - hex: '#FF7E27'
+            id: 33140a65-9405-4f61-ab88-6e8bf4dfafd2
+            name: Nineteen Eighty Four
+            type: scale
+        geom: line
+        height: 3
+        hoverDimension: auto
+        kind: Xy
+        legendColorizeRows: true
+        legendOpacity: 1
+        legendOrientationThreshold: 1e+08
+        name: GPU Temperature
+        position: overlaid
+        queries:
+          - query: |-
+                from(bucket: "Jetson")
+                  |> range(start: v.timeRangeStart, stop: v.timeRangeStop)
+                  |> filter(fn: (r) => r["_measurement"] == "exec_jetson")
+                  |> filter(fn: (r) => r["_field"] == "jetson_Temp AO" or r["_field"] == "jetson_Temp CPU" or r["_field"] == "jetson_Temp GPU" or r["_field"] == "jetson_Temp PLL" or r["_field"] == "jetson_Temp thermal")
+                  |> aggregateWindow(every: v.windowPeriod, fn: last, createEmpty: false)
+                  |> yield(name: "last")
+        staticLegend: {}
+        width: 12
+        xCol: _time
+        yCol: _value
+        yPos: 5
+      - colors:
+          - hex: '#7CE490'
+            id: base
+            name: honeydew
+            type: text
+        decimalPlaces: 2
+        height: 1
+        kind: Single_Stat
+        name: NVDEC
+        queries:
+          - query: |-
+                from(bucket: "Jetson")
+                  |> range(start: v.timeRangeStart, stop: v.timeRangeStop)
+                  |> filter(fn: (r) => r["_measurement"] == "exec_jetson")
+                  |> filter(fn: (r) => r["_field"] == "jetson_NVDEC")
+                  |> aggregateWindow(every: v.windowPeriod, fn: last, createEmpty: false)
+                  |> yield(name: "last")
+        staticLegend: {}
+        width: 1
+        xPos: 3
+      - colors:
+          - hex: '#FFD255'
+            id: base
+            name: thunder
+            type: text
+        decimalPlaces: 2
+        height: 1
+        kind: Single_Stat
+        name: NVENC
+        queries:
+          - query: |-
+                from(bucket: "Jetson")
+                  |> range(start: v.timeRangeStart, stop: v.timeRangeStop)
+                  |> filter(fn: (r) => r["_measurement"] == "exec_jetson")
+                  |> filter(fn: (r) => r["_field"] == "jetson_NVENC")
+                  |> aggregateWindow(every: v.windowPeriod, fn: last, createEmpty: false)
+                  |> yield(name: "last")
+        staticLegend: {}
+        width: 1
+        xPos: 3
+        yPos: 1
+      - colors:
+          - hex: '#F95F53'
+            id: base
+            name: curacao
+            type: text
+        decimalPlaces: 2
+        height: 1
+        kind: Single_Stat
+        name: NVJPG
+        queries:
+          - query: |-
+                from(bucket: "Jetson")
+                  |> range(start: v.timeRangeStart, stop: v.timeRangeStop)
+                  |> filter(fn: (r) => r["_measurement"] == "exec_jetson")
+                  |> filter(fn: (r) => r["_field"] == "jetson_NVJPG")
+                  |> aggregateWindow(every: v.windowPeriod, fn: last, createEmpty: false)
+                  |> yield(name: "last")
+        staticLegend: {}
+        width: 1
+        xPos: 3
+        yPos: 2
+      - colors:
+          - hex: '#32B08C'
+            id: base
+            name: viridian
+            type: background
+        decimalPlaces: 2
+        height: 1
+        kind: Single_Stat
+        name: NVP Model
+        queries:
+          - query: |-
+                from(bucket: "Jetson")
+                  |> range(start: v.timeRangeStart, stop: v.timeRangeStop)
+                  |> filter(fn: (r) => r["_measurement"] == "exec_jetson")
+                  |> filter(fn: (r) => r["_field"] == "jetson_nvp model")
+                  |> aggregateWindow(every: v.windowPeriod, fn: last, createEmpty: false)
+                  |> yield(name: "last")
+        staticLegend: {}
+        width: 3
+        xPos: 4
+      - colors:
+          - hex: '#383846'
+            id: base
+            name: pepper
+            type: background
+        decimalPlaces: 0
+        height: 2
+        kind: Single_Stat
+        name: Up Time
+        queries:
+          - query: |-
+                from(bucket: "Jetson")
+                  |> range(start: v.timeRangeStart, stop: v.timeRangeStop)
+                  |> filter(fn: (r) => r["_measurement"] == "exec_jetson")
+                  |> filter(fn: (r) => r["_field"] == "jetson_uptime")
+                  |> aggregateWindow(every: v.windowPeriod, fn: last, createEmpty: false)
+                  |> yield(name: "last")
+        staticLegend: {}
+        width: 3
+        xPos: 4
+        yPos: 1
+      - colors:
+          - hex: '#7CE490'
+            id: "0"
+            name: honeydew
+            type: min
+          - hex: '#FFB94A'
+            id: b25aecba-8e01-42b2-af1f-566d9cc11402
+            name: pineapple
+            type: threshold
+            value: 30
+          - hex: '#DC4E58'
+            id: 7a958848-37e8-443d-88c8-4c4051793c48
+            name: fire
+            type: threshold
+            value: 75
+          - hex: '#BF3D5E'
+            id: "1"
+            name: ruby
+            type: max
+            value: 100
+        decimalPlaces: 2
+        height: 3
+        kind: Gauge
+        name: Fan Speed
+        queries:
+          - query: |-
+                from(bucket: "Jetson")
+                  |> range(start: v.timeRangeStart, stop: v.timeRangeStop)
+                  |> filter(fn: (r) => r["_measurement"] == "exec_jetson")
+                  |> filter(fn: (r) => r["_field"] == "jetson_fan")
+                  |> aggregateWindow(every: v.windowPeriod, fn: last, createEmpty: false)
+                  |> yield(name: "last")
+        staticLegend: {}
+        suffix: '%'
+        width: 5
+        xPos: 7
+    description: A collection of useful visualizations for monitoring your Jetson
+        device. Data is provided by Jetson-Stats
+    name: Jetson Stats
