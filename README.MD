@@ -13,7 +13,7 @@ Jetson_Stats -> python_script -> Telegraf -> Influx OSS and Influx Cloud
 
 Install Telegraf and Jetson Stats on your Jetson device:
 ```bash
-Sudo chmod +x install_prereq.sh && sudo install_prereq.sh
+sudo chmod +x install_prereq.sh && sudo install_prereq.sh
 ```
 ## Guide
 
