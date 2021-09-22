@@ -19,4 +19,17 @@ source /etc/lsb-release
 echo "deb https://repos.influxdata.com/${DISTRIB_ID,,} ${DISTRIB_CODENAME} stable" | sudo tee /etc/apt/sources.list.d/influxdb.list
 sudo apt-get update && sudo apt-get install telegraf
 
-echo "Install complete."
+
+# Add telegraf user to Jetson Stat group
+sudo usermod -aG jetson_stats telegraf
+
+# Copy python script to /usr/local/bin
+sudo cp ./jetson_stats.py /usr/local/bin
+
+# Copy Telegraf config over to /etc/telegraf
+sudo cp ./telegraf_jetson_stats.conf /etc/telegraf/
+
+sudo systemctl enable telegraf
+sudo systemctl start telegraf
+
+echo "Install complete. Telegraf instance is now running and collecting Jetson Stats"
