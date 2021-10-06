@@ -17,7 +17,7 @@ sudo chmod +x install_prereq.sh && sudo install_prereq.sh
 ```
 ## Guide
 
-Please follow my blog [here]()
+Please follow my blog [here](https://www.influxdata.com/blog/nvidia-jetson-series-part-1-jetson-stats/)
 
 ## Contributing
 Pull requests are welcome. For major changes, please open an issue first to discuss what you would like to change.
